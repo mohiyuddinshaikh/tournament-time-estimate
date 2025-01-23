@@ -3,11 +3,17 @@ import "./Tournament.css";
 
 export default function Tournament({
   calculateTotalTournamentTime,
+  calculateKnockoutTournamentTime,
   tournamentTime,
+  knockoutTournamentTime,
   setBoards,
   setPlayers,
   setRounds,
   setGameTime,
+  rounds,
+  players,
+  boards,
+  gameTime,
 }) {
   //   const [rounds, setRounds] = useState(1);
   //   const [players, setPlayers] = useState(0);
@@ -51,18 +57,10 @@ export default function Tournament({
       <div className="heading">Chess Tournament Time</div>
       <div className="tournamentInput">
         <div>
-          <span className="title">GAME TIME</span>
-          <input
-            className="inputBox"
-            // value={gameTime}
-            onChange={handleTimeChange}
-          />
-        </div>
-        <div>
           <span className="title">NUMBER OF ROUNDS</span>
           <input
             className="inputBox"
-            // value={rounds}
+            value={rounds}
             onChange={handleRoundsChange}
           />
         </div>
@@ -70,7 +68,7 @@ export default function Tournament({
           <span className="title">NUMBER OF PLAYERS</span>
           <input
             className="inputBox"
-            // value={players}
+            value={players}
             onChange={handlePlayersChange}
           />
         </div>
@@ -78,8 +76,16 @@ export default function Tournament({
           <span className="title">NUMBER OF BOARDS</span>
           <input
             className="inputBox"
-            // value={boards}
+            value={boards}
             onChange={handleBoardChange}
+          />
+        </div>
+        <div>
+          <span className="title">GAME TIME</span>
+          <input
+            className="inputBox"
+            value={gameTime}
+            onChange={handleTimeChange}
           />
         </div>
       </div>
@@ -87,7 +93,13 @@ export default function Tournament({
         <div className="calculateBtn" onClick={calculateTotalTournamentTime}>
           Calculate Tournament Time
         </div>
-        <div className="timeTaken">{tournamentTime}</div>
+        <div className="calculateBtn" onClick={calculateKnockoutTournamentTime}>
+          Calculate Knockout Tournament Time
+        </div>
+        <div className="timeTaken">Swiss Tournament Time: {tournamentTime}</div>
+        <div className="timeTaken">
+          Knockout Tournament Time: {knockoutTournamentTime}
+        </div>
         {/* <div className="timeTaken">
           Total Tournament Time: {Math.floor(totalTime / 60)} hrs{" "}
           {totalTime % 60} mins

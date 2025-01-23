@@ -5,10 +5,10 @@ function App() {
   // const NUMBER_OF_ROUNDS = 2;
   // const NUMBER_OF_PLAYERS = 20;
   // const NUMBER_OF_BOARDS = 5;
-  const [rounds, setRounds] = useState(1);
-  const [players, setPlayers] = useState(0);
-  const [boards, setBoards] = useState(0);
-  const [gameTime, setGameTime] = useState(0);
+  const [rounds, setRounds] = useState(2);
+  const [players, setPlayers] = useState(20);
+  const [boards, setBoards] = useState(5);
+  const [gameTime, setGameTime] = useState(30);
 
   // const TIME_ON_CLOCK = 15;
   const TIME_PER_KNOCKOUT_GAME = 60;
@@ -17,6 +17,8 @@ function App() {
   // const timePerGame = TIME_ON_CLOCK * 2;
 
   const [tournamentTime, setTournamentTime] = useState<number>(0);
+  const [knockoutTournamentTime, setKnockoutTournamentTime] =
+    useState<number>(0);
 
   function calculateTotalTournamentTime() {
     const timePerRound = calculateTimeForGroupRound();
@@ -47,6 +49,35 @@ function App() {
     return numberOfTables * TIME_PER_KNOCKOUT_GAME;
   }
 
+  function calculateKnockoutTournamentTime() {
+    let totalPlayers = players;
+    let time = 0;
+    let byePlayer = 0;
+
+    while (totalPlayers > 1) {
+      if (totalPlayers % 2 == 1) {
+        totalPlayers -= 1;
+        byePlayer = 1;
+      }
+      const isChampionshipMatch = totalPlayers <= 4;
+      const totalGames = Math.ceil(totalPlayers / 2);
+      const numberOfTables = Math.ceil(totalGames / boards);
+      time =
+        time +
+        (isChampionshipMatch
+          ? TIME_PER_KNOCKOUT_GAME * numberOfTables
+          : gameTime * numberOfTables);
+      totalPlayers = totalPlayers / 2;
+      if (byePlayer) {
+        totalPlayers = totalPlayers + byePlayer;
+        byePlayer = 0;
+      }
+    }
+    setKnockoutTournamentTime(time / 60); // in hours
+    console.log("Knockout tournament time:", time);
+    console.log("Knockout tournament time in hours:", time / 60);
+  }
+
   return (
     <div className="main">
       {/* <button onClick={calculateTimeForGroupRound}>
@@ -59,11 +90,17 @@ function App() {
       {/* <div className="tournamentTime">{tournamentTime}</div> */}
       <Tournament
         calculateTotalTournamentTime={calculateTotalTournamentTime}
+        calculateKnockoutTournamentTime={calculateKnockoutTournamentTime}
         tournamentTime={tournamentTime}
+        knockoutTournamentTime={knockoutTournamentTime}
         setRounds={setRounds}
         setPlayers={setPlayers}
         setBoards={setBoards}
         setGameTime={setGameTime}
+        rounds={rounds}
+        players={players}
+        boards={boards}
+        gameTime={gameTime}
       />
     </div>
   );
